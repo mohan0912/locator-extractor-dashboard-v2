@@ -1,0 +1,147 @@
+/* === Global Styles === */
+body {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background-color: #f6f8fa;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  width: 90%;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px 40px;
+}
+
+h2 {
+  text-align: center;
+  color: #0078d7;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #0078d7;
+  outline: none;
+}
+
+/* === Buttons === */
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #0078d7;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-top: 15px;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+#stopBtn {
+  background-color: #d9534f;
+}
+
+#stopBtn:hover {
+  background-color: #c9302c;
+}
+
+/* === Toggles === */
+.toggles {
+  margin-top: 15px;
+}
+
+.toggles label {
+  font-weight: normal;
+  margin-right: 15px;
+}
+
+/* === Log Viewer === */
+#log {
+  background-color: #0f111a;
+  color: #e6e6e6;
+  padding: 15px;
+  height: 250px;
+  overflow-y: auto;
+  margin-top: 20px;
+  border-radius: 6px;
+  font-family: "Consolas", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* === Colored Log Levels === */
+.log-info {
+  color: #00b4ff;
+}
+.log-warn {
+  color: #ffd166;
+}
+.log-error {
+  color: #ff5c5c;
+}
+.log-success {
+  color: #6dd47e;
+}
+
+/* === Small Helper === */
+small {
+  color: #666;
+  font-size: 12px;
+}
+
+/* === Inline Toggle Alignment (no wrapping, tight spacing) === */
+.toggle-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;                 /* small gap between checkbox and text */
+  white-space: nowrap;      /* prevents text wrapping */
+  margin-top: 10px;
+  cursor: pointer;
+  user-select: none;        /* optional: avoid accidental text selection */
+}
+
+.toggle-inline input[type="checkbox"] {
+  margin: 0;
+  transform: scale(1.1);
+  accent-color: #0078d7;
+}
+
+.toggle-inline span {
+  line-height: 1.2;
+  font-weight: 500;
+}

@@ -1,0 +1,286 @@
+[
+  {
+    "tag": "span",
+    "id": null,
+    "name": null,
+    "class": "chNavIcon appendBottom2 chSprite chFlights active",
+    "text": "",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "chNavIcon appendBottom2 chSprite chFlights active"
+    },
+    "dataset": {},
+    "css": "div#SW > div > div:nth-of-type(2) > div > div > nav > ul > li > span > a > span > span",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/nav[1]/ul[1]/li[1]/span[1]/a[1]/span[1]/span[1]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:24.394Z"
+  },
+  {
+    "tag": "span",
+    "id": null,
+    "name": null,
+    "class": "headerIconTextAlignment chNavText darkGreyText",
+    "text": "Hotels",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "headerIconTextAlignment chNavText darkGreyText"
+    },
+    "dataset": {},
+    "css": "div#SW > div > div:nth-of-type(2) > div > div > nav > ul > li:nth-of-type(2) > span > a > span:nth-of-type(2)",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/nav[1]/ul[1]/li[2]/span[1]/a[1]/span[2]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:25.357Z"
+  },
+  {
+    "tag": "span",
+    "id": null,
+    "name": null,
+    "class": "chNavIcon appendBottom2 chSprite chHomestays inactive",
+    "text": "",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "chNavIcon appendBottom2 chSprite chHomestays inactive"
+    },
+    "dataset": {},
+    "css": "div#SW > div > div:nth-of-type(2) > div > div > nav > ul > li:nth-of-type(3) > span > a > span > span",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/nav[1]/ul[1]/li[3]/span[1]/a[1]/span[1]/span[1]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:27.762Z"
+  },
+  {
+    "tag": "a",
+    "id": null,
+    "name": null,
+    "class": "headerIcons makeFlex hrtlCenter column",
+    "text": "Buses",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "href": "https://www.makemytrip.com/bus-tickets/",
+      "class": "headerIcons makeFlex hrtlCenter column"
+    },
+    "dataset": {},
+    "css": "div#SW > div > div:nth-of-type(2) > div > div > nav > ul > li:nth-of-type(6) > span > a",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/nav[1]/ul[1]/li[6]/span[1]/a[1]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:44.449Z"
+  },
+  {
+    "tag": "span",
+    "id": null,
+    "name": null,
+    "class": "headerIconTextAlignment chNavText darkGreyText",
+    "text": "Cabs",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "headerIconTextAlignment chNavText darkGreyText"
+    },
+    "dataset": {},
+    "css": "div#SW > div > div:nth-of-type(2) > div > div > nav > ul > li:nth-of-type(7) > span > a > span:nth-of-type(2)",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/nav[1]/ul[1]/li[7]/span[1]/a[1]/span[2]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:45.232Z"
+  },
+  {
+    "tag": "span",
+    "id": null,
+    "name": null,
+    "class": "headerIconTextAlignment chNavText darkGreyText",
+    "text": "Tours & Attractions",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "headerIconTextAlignment chNavText darkGreyText"
+    },
+    "dataset": {},
+    "css": "div#SW > div > div:nth-of-type(2) > div > div > nav > ul > li:nth-of-type(8) > span > a > span:nth-of-type(2)",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/nav[1]/ul[1]/li[8]/span[1]/a[1]/span[2]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:46.013Z"
+  },
+  {
+    "tag": "span",
+    "id": null,
+    "name": null,
+    "class": "chNavIcon appendBottom2 chSprite chVisa inactive",
+    "text": "",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "chNavIcon appendBottom2 chSprite chVisa inactive"
+    },
+    "dataset": {},
+    "css": "div#SW > div > div:nth-of-type(2) > div > div > nav > ul > li:nth-of-type(9) > span > a > span > span",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/nav[1]/ul[1]/li[9]/span[1]/a[1]/span[1]/span[1]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:46.966Z"
+  },
+  {
+    "tag": "div",
+    "id": null,
+    "name": null,
+    "class": "flt_fsw_inputBox searchToCity inactiveWidget activeWidget",
+    "text": "To\n\nBLR, Bengaluru International Airport India\n\nPOPULAR CITIES\n\nMumbai, India\n\nBOM\n\nChhatrapati Shivaji International Airport\n\nNew Delhi, India\n\nDEL\n\nIndira Gandhi International Airport\n\nBangkok, Thailand\n\nBKK\n\nBangkok\n\nBengaluru, India\n\nBLR\n\nBengaluru International Airport\n\nPune, India\n\nPNQ\n\nPune A",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "flt_fsw_inputBox searchToCity inactiveWidget activeWidget"
+    },
+    "dataset": {},
+    "css": "div#top-banner > div:nth-of-type(2) > div > div > div > div > div > div:nth-of-type(2) > div > div:nth-of-type(2)",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:48.313Z"
+  },
+  {
+    "tag": "span",
+    "id": null,
+    "name": null,
+    "class": "truncate airPortName ",
+    "text": "DEL, Delhi Airport India",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "data-cy": "defaultFromValue",
+      "title": "",
+      "class": "truncate airPortName "
+    },
+    "dataset": {
+      "cy": "defaultFromValue"
+    },
+    "css": "div#top-banner > div:nth-of-type(2) > div > div > div > div > div > div:nth-of-type(2) > div > div > label > p > span",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/label[1]/p[1]/span[1]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:51.389Z"
+  },
+  {
+    "tag": "p",
+    "id": null,
+    "name": null,
+    "class": "blackText font20 code lineHeight36",
+    "text": "22 Oct25",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "data-cy": "departureDate",
+      "class": "blackText font20 code lineHeight36"
+    },
+    "dataset": {
+      "cy": "departureDate"
+    },
+    "css": "div#top-banner > div:nth-of-type(2) > div > div > div > div > div > div:nth-of-type(2) > div > div:nth-of-type(3) > label > p",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[3]/label[1]/p[1]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:52.895Z"
+  },
+  {
+    "tag": "p",
+    "id": null,
+    "name": null,
+    "class": "latoBlack font12 greyText lineHeight16",
+    "text": "Tap to add a return date for bigger discounts",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "data-cy": "returnDefaultText",
+      "class": "latoBlack font12 greyText lineHeight16"
+    },
+    "dataset": {
+      "cy": "returnDefaultText"
+    },
+    "css": "div#top-banner > div:nth-of-type(2) > div > div > div > div > div > div:nth-of-type(2) > div > div:nth-of-type(4) > div:nth-of-type(2) > label > p",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[4]/div[2]/label[1]/p[1]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:53.734Z"
+  },
+  {
+    "tag": "p",
+    "id": null,
+    "name": null,
+    "class": null,
+    "text": "Economy/Premium Economy",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": ""
+    },
+    "dataset": {},
+    "css": "div#top-banner > div:nth-of-type(2) > div > div > div > div > div > div:nth-of-type(2) > div > div:nth-of-type(5) > label > p:nth-of-type(2)",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[5]/label[1]/p[2]",
+    "shadowHostChain": null,
+    "visible": true,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:54.565Z"
+  },
+  {
+    "tag": "div",
+    "id": null,
+    "name": null,
+    "class": "hsBackDrop",
+    "text": "",
+    "role": null,
+    "ariaLabel": null,
+    "attributes": {
+      "class": "hsBackDrop"
+    },
+    "dataset": {},
+    "css": "div#top-banner > div:nth-of-type(2) > div > div > div > div > div > div:nth-of-type(2) > div > div:nth-of-type(2) > div:nth-of-type(2)",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/div[2]",
+    "shadowHostChain": null,
+    "visible": false,
+    "framework": "HTML",
+    "crossOrigin": false,
+    "pageUrl": "https://www.makemytrip.com/",
+    "timestamp": "2025-10-21T02:58:57.336Z"
+  }
+]

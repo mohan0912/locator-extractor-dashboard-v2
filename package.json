@@ -1,0 +1,16 @@
+{
+  "name": "locator-extractor-dashboard-v2",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dashboard": "node src/services/server.js"
+  },
+  "dependencies": {
+    "playwright": "^1.43.0",
+    "express": "^4.19.2",
+    "ws": "^8.17.0",
+    "minimist": "^1.2.8"
+  }
+}
