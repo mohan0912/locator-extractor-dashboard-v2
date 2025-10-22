@@ -1,7 +1,8 @@
 import { chromium } from "playwright";
 import fs from "fs";
 import path from "path";
-import { getTimestamp, deduplicate, ensureDir, atomicWrite } from "./utils.js";
+import { getTimestamp, deduplicate, ensureDir, atomicWrite, getProxySettingsFrom } from "./utils.js";
+
 
 
 /* Utilities */
@@ -406,16 +407,20 @@ export async function launchExtractor(options = {}) {
     promptType = "locator",
     scanHidden = false,
     outputDir = "output",
-    tagFilter = null
+    tagFilter = null,
+    proxyUrl = null,
+    proxyUser = null,
+    proxyPass = null
   } = options;
 
-
+  const proxy = getProxySettingsFrom({ proxyUrl, proxyUser, proxyPass });
+  if (proxy) safeLog(wsBroadcast, "INFO", `Using proxy server: ${proxy.server}`); l̥
   if (!url) throw new Error("url is required");
 
   safeLog(wsBroadcast, "INFO", `Starting extraction for ${url} (headless=${headless})`);
   let browser;
   try {
-    browser = await chromium.launch({ headless, args: ["--disable-dev-shm-usage"] });
+    browser = await chromium.launch({ headless, args: ["--disable-dev-shm-usage"], proxy, });
     activeBrowser = browser;
     const context = await browser.newContext({ ignoreHTTPSErrors: true });
     activeContext = context;

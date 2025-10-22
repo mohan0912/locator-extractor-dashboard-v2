@@ -34,6 +34,10 @@ This dashboard enables testers, automation engineers, and QA developers to **vis
 - Works in interactive mode for manual exploration.
 - Can also run headless in CI/CD pipelines (CLI mode).
 
+✅ **Proxy & Network Flexibility**
+- Optional proxy support for corporate networks.
+- Configurable dashboard port for local environments.
+
 ---
 
 ## 🧩 Project Structure
@@ -49,6 +53,8 @@ locator-extractor-dashboard-v2/
 │   │   ├── server.js           # Express.js + WebSocket server for dashboard
 │   │   ├── dashboard.html      # Web-based user interface
 │   │   └── style.css           # UI styling
+│   ├── config/
+│   │   └── extractor.config.js # Default configuration
 │   └── index.js                # CLI entry point
 │
 ├── output/                     # Saved extraction results
@@ -79,6 +85,13 @@ Once started:
 ✅ Dashboard running at http://localhost:3000
 ```
 
+> 💡 You can also customize the port:
+> ```bash
+> set PORT=4000
+> npm run dashboard
+> ```
+> The dashboard will then be available at `http://localhost:4000`.
+
 ---
 
 ## 🖥️ Using the Dashboard (UI Mode)
@@ -106,46 +119,6 @@ output/
 
 ---
 
-## 🧠 JSON Output Example
-
-```json
-[
-  {
-    "tag": "button",
-    "id": "submit",
-    "class": "btn primary",
-    "text": "Login",
-    "css": "form > button#submit",
-    "xpath": "/html/body/div[2]/form/button[1]",
-    "ariaLabel": null,
-    "visible": true,
-    "framework": "React",
-    "pageUrl": "https://enterprise.company.com/login"
-  }
-]
-```
-
----
-
-## 🤖 AI Prompt Output Example (`copilot_prompts_playwright_*.txt`)
-
-```
-You are an automation expert using Microsoft Playwright (TypeScript/JavaScript).
-Generate the most stable Playwright locator using page.getByRole, page.getByTestId, or page.locator.
-
-Element details:
-{
-  "tag": "button",
-  "id": "submit",
-  "text": "Login",
-  "css": "form > button#submit"
-}
-
-Return only the Playwright locator statement (e.g. page.getByTestId('login-button'));
-```
-
----
-
 ## ⚡ CLI Mode (Headless / Automation Mode)
 
 You can run the extractor directly via command line without UI.
@@ -155,6 +128,7 @@ node src/index.js --url https://example.com   --framework playwright   --promptT
 ```
 
 ### CLI Flags
+
 | Flag | Description | Default |
 |------|--------------|----------|
 | `--url` | Target application URL | **Required** |
@@ -163,30 +137,92 @@ node src/index.js --url https://example.com   --framework playwright   --promptT
 | `--scanHidden` | Whether to include hidden elements | `false` |
 | `--tagFilter` | Comma-separated element tag/attribute filters | `null` |
 | `--outputDir` | Folder for saving results | `output` |
+| `--headless` | Run browser in headless mode | `false` |
+| `--customExample` | Example locator syntax for custom frameworks | `""` |
+| `--proxyUrl` | Optional proxy server (e.g., `http://proxy.corp.local:8080`) | `null` |
+| `--proxyUser` | Proxy username (if required) | `null` |
+| `--proxyPass` | Proxy password (if required) | `null` |
 
 ---
 
-## 🧰 Advanced Options
+## 🌐 Proxy Usage (Optional)
 
-### 🔹 Custom Framework Mode
-Select **“Custom Framework”** from the dropdown and enter an example such as:
-```js
-this.loginButton = page.findElement("[data-test=login]");
+Locator Extractor supports **optional proxy configuration** for users working inside corporate or restricted networks.  
+If your environment requires routing traffic through a proxy, you can configure it easily.  
+If not — just ignore this section. The tool will connect directly without any proxy.
+
+---
+
+### 🔹 1. Environment Variable Method (Recommended)
+
+Set your proxy once in the terminal before starting the dashboard or CLI.
+
+#### Windows (PowerShell)
+```bash
+set HTTPS_PROXY=http://proxy.corp.local:8080
+set PROXY_USER=myusername
+set PROXY_PASS=mypassword
+npm run dashboard
 ```
-The AI prompt generator will adapt to your syntax when generating element definitions.
+
+#### macOS / Linux
+```bash
+export HTTPS_PROXY=http://proxy.corp.local:8080
+export PROXY_USER=myusername
+export PROXY_PASS=mypassword
+npm run dashboard
+```
+
+> 💡 Tip: You can omit `PROXY_USER` and `PROXY_PASS` if your proxy does not require authentication.
 
 ---
 
-## 🧩 Architecture Overview
+### 🔹 2. CLI Argument Method
 
-| Component | Responsibility |
-|------------|----------------|
-| `dashboard.html` | Frontend UI for user interaction and log streaming |
-| `style.css` | Styled UI (inline toggle alignment, light design) |
-| `server.js` | Express + WebSocket layer to communicate between frontend and Playwright extractor |
-| `extractor.js` | Main Playwright engine handling element capture, frame injection, XPath/CSS computation, and prompt building |
-| `utils.js` | Shared file helpers: timestamp, deduplication, directory creation, atomic writes |
-| `index.js` | CLI entrypoint (headless automation mode) |
+You can also pass proxy details directly when running the extractor CLI:
+
+```bash
+node src/index.js --url https://example.com   --proxyUrl http://proxy.corp.local:8080   --proxyUser alice   --proxyPass Secret123
+```
+
+**Notes:**
+- All proxy parameters are **optional**.
+- If both environment variables and CLI args are provided, **CLI args take priority**.
+- Proxy credentials are **never logged or displayed**.
+
+---
+
+### 🔹 3. Quick Connectivity Test (Optional)
+
+To verify your proxy before running the extractor, run:
+```bash
+node test-proxy.js
+```
+
+This checks that Playwright can reach `https://example.com` using your proxy configuration.
+
+---
+
+### 🔹 4. No Proxy Mode (Default)
+
+If you’re on a normal unrestricted network, simply run:
+```bash
+node src/index.js --url https://example.com
+```
+
+No proxy setup is required — the tool automatically connects directly.
+
+---
+
+### ✅ Proxy Summary
+
+| Mode | Proxy | Auth | How to Configure |
+|------|--------|------|------------------|
+| No Proxy | ❌ | – | *(default)* |
+| Proxy (no auth) | ✅ | ❌ | `HTTPS_PROXY=http://proxy:8080` |
+| Proxy (with auth) | ✅ | ✅ | Add `PROXY_USER`, `PROXY_PASS` |
+| CLI Proxy | ✅ | ✅/❌ | `--proxyUrl`, `--proxyUser`, `--proxyPass` |
+| Auto-detect | ✅ | ✅ | Reads environment automatically |
 
 ---
 
@@ -217,10 +253,12 @@ Log levels:
 
 | Issue | Cause | Fix |
 |--------|--------|-----|
-| “`automationFramework is not defined`” | Old reference in extractor | Ensure `attachPage()` destructures `automationFramework` and `customExample` |
+| “automationFramework is not defined” | Old reference in extractor | Ensure `attachPage()` destructures `automationFramework` and `customExample` |
 | “Saved 0 prompts” | No elements captured | Make sure to **Ctrl + Click** elements or enable **Scan hidden elements** |
 | “Cannot GET /” | Wrong static path | Ensure `dashboard.html` is in the same folder as `server.js` |
 | “WebSocket connection lost” | Server restarted during session | Refresh browser, the dashboard auto-reconnects |
+| “Navigation warning” | Invalid or internal URL | Ensure you use a valid `http` or `https` target |
+| “Proxy connection failed” | Wrong proxy or credentials | Run `node test-proxy.js` to confirm connectivity |
 
 ---
 
@@ -230,9 +268,6 @@ Log levels:
 - **Express.js + WebSocket** (real-time communication)
 - **Vanilla JS + HTML/CSS** (lightweight frontend)
 - **Node.js** (backend runtime)
-
----
-
 
 ---
 

@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { WebSocketServer } from "ws";
 import { launchExtractor, stopExtractor } from "../core/extractor.js";
+import { isValidUrl } from "../core/utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,8 +18,10 @@ app.get("/", (req, res) => {
 let isRunning = false;
 let activeClients = new Set();
 
-const server = app.listen(3000, () =>
-  console.log("✅ Dashboard running at http://localhost:3000")
+const PORT = process.env.PORT || 3000;
+
+const server = app.listen(PORT, () =>
+  console.log(`✅ Dashboard running at http://localhost:${PORT}`)
 );
 
 const wss = new WebSocketServer({ server });
@@ -54,6 +57,10 @@ wss.on("connection", (ws) => {
 
       // Start Extraction
       if (data.type === "start") {
+        if (!isValidUrl(data.url)) {
+          ws.send(JSON.stringify({ type: "error", message: `❌ Invalid or unsafe URL: ${data.url}` }));
+          return;
+        }
         if (isRunning) {
           ws.send(JSON.stringify({ type: "error", message: "⚠️ Extraction already in progress." }));
           return;

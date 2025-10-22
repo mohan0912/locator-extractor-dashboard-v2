@@ -54,3 +54,18 @@ export function atomicWrite(file, data) {
     console.error(`❌ atomicWrite failed for ${file}:`, e.message);
   }
 }
+
+// --- Add this near the top of utils.js ---
+export function isValidUrl(url) {
+  try {
+    const parsed = new URL(url);
+    const allowedProtocols = ["http:", "https:"];
+    if (!allowedProtocols.includes(parsed.protocol)) return false;
+    if (parsed.hostname === "localhost" || parsed.hostname.match(/^[a-z0-9.-]+$/i)) {
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
