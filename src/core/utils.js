@@ -69,3 +69,30 @@ export function isValidUrl(url) {
     return false;
   }
 }
+
+/**
+ * Detects and builds proxy configuration for Playwright if provided.
+ * Supports both CLI/environment-based configuration.
+ */
+export function getProxySettingsFrom(options = {}) {
+  const proxyUrl =
+    options.proxyUrl ||
+    process.env.HTTPS_PROXY ||
+    process.env.HTTP_PROXY ||
+    process.env.https_proxy ||
+    process.env.http_proxy ||
+    null;
+
+  if (!proxyUrl) return null;
+
+  const proxy = { server: proxyUrl.trim() };
+
+  if (options.proxyUser || process.env.PROXY_USER)
+    proxy.username = options.proxyUser || process.env.PROXY_USER;
+
+  if (options.proxyPass || process.env.PROXY_PASS)
+    proxy.password = options.proxyPass || process.env.PROXY_PASS;
+
+  return proxy;
+}
+

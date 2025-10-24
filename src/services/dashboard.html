@@ -1,83 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Locator Extractor Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: #f5f7fa;
-      color: #222;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 30px;
-    }
-
-    .container {
-      background: #fff;
-      padding: 25px 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      width: 650px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      margin-top: 12px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 6px;
-      background-color: #0078d4;
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    #stopBtn {
-      background-color: #d83b01;
-    }
-
-    pre#log {
-      margin-top: 20px;
-      background: #111;
-      color: #eee;
-      height: 300px;
-      overflow-y: auto;
-      padding: 12px;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 13px;
-    }
-
-    .log-line { margin: 3px 0; }
-    .log-success { color: #00ff99; }
-    .log-error { color: #ff5555; }
-    .log-warn { color: #ffcc00; }
-    .log-info { color: #61dafb; }
-  </style>
 </head>
 
 <body>
@@ -96,73 +23,66 @@
       <option value="selenium">Selenium</option>
       <option value="cypress">Cypress</option>
       <option value="robot">Robot Framework</option>
-      <!-- <option value="bdd">BDD (Cucumber)</option> -->
       <option value="custom">Custom Framework</option>
     </select>
 
     <div id="customExampleSection" style="display: none;">
-      <label>Example Definition (how you define locators):</label>
-      <textarea id="customExample" rows="3" placeholder='e.g. this.loginButton = page.locator("[data-test=login]");'></textarea>
-      <small>Provide an example of how your framework defines locators or elements.</small>
+      <label>Example Definition (for custom frameworks):</label>
+      <textarea id="customExample" rows="3"
+        placeholder='e.g. this.loginButton = page.locator("[data-test=login]");'></textarea>
+      <small>Provide a sample of how your framework defines elements.</small>
     </div>
 
     <div class="toggles">
-      <!-- <label><input type="checkbox" id="headless" /> Run in headless mode</label> -->
-      <label class="toggle-inline"><input type="checkbox" id="scanHidden" /> Scan hidden elements</label>
+      <!-- <label class="toggle-inline"><input type="checkbox" id="scanHidden" /> Scan hidden elements</label> -->
+      <label class="toggle-inline"><input type="checkbox" id="autoTab" /> Auto Extract All (Smart DOM Walker)</label>
+
+      <div id="generatePromptsContainer" style="display: none;">
+        <label class="toggle-inline">
+          <input type="checkbox" id="generatePrompts" />
+          Generate AI Prompts (Auto Mode)
+        </label>
+      </div>
     </div>
 
-    <button id="startBtn">Start Extraction</button>
-    <button id="stopBtn" style="margin-left: 10px;">Stop Extraction</button>
+    <div class="button-section">
+      <button id="startBtn">Start Extraction</button>
+      <button id="startAutoBtn" class="hidden">Start Auto Extraction</button>
+      <button id="stopBtn" class="danger">Stop Extraction</button>
+    </div>
 
     <pre id="log"></pre>
   </div>
 
   <script>
     let ws;
-    let reconnectAttempts = 0;
-    const maxReconnectAttempts = 10;
-    const reconnectDelayBase = 1000;
+    let extractionRunning = false;
 
     const log = document.getElementById("log");
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
+    const startAutoBtn = document.getElementById("startAutoBtn");
+    const autoTabCheckbox = document.getElementById("autoTab");
+    const generatePromptsDiv = document.getElementById("generatePromptsContainer");
     const automationDropdown = document.getElementById("automationFramework");
     const customExampleSection = document.getElementById("customExampleSection");
 
-    let extractionRunning = false;
+    // Toggle additional options
+    autoTabCheckbox.addEventListener("change", function () {
+      if (this.checked) {
+        generatePromptsDiv.style.display = "block";
+        startAutoBtn.classList.remove("hidden");
+      } else {
+        generatePromptsDiv.style.display = "none";
+        startAutoBtn.classList.add("hidden");
+        document.getElementById("generatePrompts").checked = false;
+      }
+    });
 
-    // ---- WebSocket Connection Handler ----
-    function initWebSocket() {
-      ws = new WebSocket("ws://localhost:3000");
+    automationDropdown.addEventListener("change", () => {
+      customExampleSection.style.display = automationDropdown.value === "custom" ? "block" : "none";
+    });
 
-      ws.onopen = () => {
-        addLog(`🔄 Connected to backend.`, "SUCCESS");
-        reconnectAttempts = 0;
-        updateButtonStates();
-      };
-
-      ws.onmessage = (msg) => {
-        const data = JSON.parse(msg.data);
-        if (data.type === "log") addLog(data.message, data.level || "INFO");
-        if (data.type === "done") addLog(data.message, "SUCCESS");
-        if (data.type === "error") addLog(`❌ ${data.message}`, "ERROR");
-      };
-
-      ws.onclose = () => {
-        if (reconnectAttempts < maxReconnectAttempts) {
-          const delay = reconnectDelayBase * Math.pow(2, reconnectAttempts);
-          addLog(`⚠️ Connection lost. Reconnecting in ${delay / 1000}s...`, "WARN");
-          reconnectAttempts++;
-          setTimeout(initWebSocket, delay);
-        } else {
-          addLog("❌ Connection permanently lost.", "ERROR");
-        }
-      };
-
-      ws.onerror = () => ws.close();
-    }
-
-    // ---- Log Helper ----
     function addLog(message, level = "INFO") {
       const line = document.createElement("div");
       line.className = `log-line log-${level.toLowerCase()}`;
@@ -171,19 +91,28 @@
       log.scrollTop = log.scrollHeight;
     }
 
-    // ---- Button State Control ----
     function updateButtonStates() {
       startBtn.disabled = extractionRunning;
       stopBtn.disabled = !extractionRunning;
-      startBtn.style.opacity = extractionRunning ? "0.6" : "1";
-      stopBtn.style.opacity = extractionRunning ? "1" : "0.6";
+      startAutoBtn.disabled = !extractionRunning;
     }
 
-    // ---- Event Listeners ----
-    automationDropdown.addEventListener("change", () => {
-      customExampleSection.style.display = automationDropdown.value === "custom" ? "block" : "none";
-    });
+    function initWebSocket() {
+      ws = new WebSocket("ws://localhost:3000");
 
+      ws.onopen = () => addLog("✅ Connected to backend.", "SUCCESS");
+
+      ws.onmessage = (msg) => {
+        const data = JSON.parse(msg.data);
+        if (data.type === "log") addLog(data.message, data.level || "INFO");
+        if (data.type === "done") addLog(data.message, "SUCCESS");
+        if (data.type === "error") addLog(`❌ ${data.message}`, "ERROR");
+      };
+
+      ws.onclose = () => addLog("⚠️ Connection closed.", "WARN");
+    }
+
+    // Start Extraction
     startBtn.addEventListener("click", () => {
       const payload = {
         type: "start",
@@ -191,28 +120,50 @@
         tagFilter: document.getElementById("tagFilter").value.trim(),
         automationFramework: automationDropdown.value,
         customExample: document.getElementById("customExample").value.trim(),
-        // headless: document.getElementById("headless").checked,
-         headless: false,
-        scanHidden: document.getElementById("scanHidden").checked,
+        headless: false,
+        //scanHidden: document.getElementById("scanHidden").checked || false,
+        autoTab: autoTabCheckbox.checked,
+        generatePrompts: document.getElementById("generatePrompts").checked,
+        onlyLaunch: !autoTabCheckbox.checked
       };
+
       if (!payload.url) return addLog("❗ Please provide a valid URL.", "WARN");
+
       ws.send(JSON.stringify(payload));
-      addLog(`🚀 Extraction started for ${payload.url}`, "INFO");
+      addLog(`🚀 Browser launched for ${payload.url}`, "INFO");
       extractionRunning = true;
       updateButtonStates();
     });
 
+    // Start Auto Extraction
+    startAutoBtn.addEventListener("click", () => {
+      if (!extractionRunning) return addLog("⚠️ Start extraction first.", "WARN");
+
+      const payload = {
+        type: "autoExtract",
+        tagFilter: document.getElementById("tagFilter").value.trim(),
+        automationFramework: automationDropdown.value,
+        generatePrompts: document.getElementById("generatePrompts").checked,
+        triggeredAutoExtract: true, // ✅ flag that user clicked "Start Auto Extraction"
+        // scanHidden: document.getElementById("scanHidden").checked || false
+      };
+
+      ws.send(JSON.stringify(payload));
+      addLog("🤖 Auto extraction triggered for current page.", "INFO");
+    });
+
+    // Stop Extraction
     stopBtn.addEventListener("click", () => {
-      if (!extractionRunning) return addLog("ℹ️ No extraction is running.", "WARN");
+      if (!extractionRunning) return addLog("ℹ️ No extraction running.", "INFO");
       ws.send(JSON.stringify({ type: "stop" }));
       addLog("🛑 Stop requested by user.", "WARN");
       extractionRunning = false;
       updateButtonStates();
     });
 
-    // ---- Initialize ----
     initWebSocket();
     updateButtonStates();
   </script>
 </body>
+
 </html>

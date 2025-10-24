@@ -5,6 +5,7 @@ import { WebSocketServer } from "ws";
 import { launchExtractor, stopExtractor } from "../core/extractor.js";
 import { isValidUrl } from "../core/utils.js";
 
+// Paths setup
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,7 +27,6 @@ const server = app.listen(PORT, () =>
 
 const wss = new WebSocketServer({ server });
 
-// Broadcast logs to all connected clients
 function broadcastLog(messageObj) {
   const payload = JSON.stringify(messageObj);
   activeClients.forEach((client) => {
@@ -34,7 +34,7 @@ function broadcastLog(messageObj) {
   });
 }
 
-// Optional REST endpoint to stop extraction
+// REST endpoint to stop extraction (optional external trigger)
 app.post("/stop", async (req, res) => {
   if (!isRunning)
     return res.status(400).json({ message: "No extraction running." });
@@ -45,7 +45,7 @@ app.post("/stop", async (req, res) => {
   res.json({ message: "✅ Extraction stopped successfully." });
 });
 
-// WebSocket logic
+// WebSocket handling for dashboard
 wss.on("connection", (ws) => {
   activeClients.add(ws);
   console.log("🔗 Dashboard client connected. Active:", activeClients.size);
@@ -55,18 +55,19 @@ wss.on("connection", (ws) => {
     try {
       const data = JSON.parse(msg.toString());
 
-      // Start Extraction
+      // 🧩 START EXTRACTION — Browser launch (manual or auto mode)
       if (data.type === "start") {
         if (!isValidUrl(data.url)) {
           ws.send(JSON.stringify({ type: "error", message: `❌ Invalid or unsafe URL: ${data.url}` }));
           return;
         }
+
         if (isRunning) {
-          ws.send(JSON.stringify({ type: "error", message: "⚠️ Extraction already in progress." }));
-          return;
+          console.warn("⚠️ Detected stale running flag — forcing reset before relaunch.");
+          isRunning = false;
         }
 
-        console.log("🚀 Launching extraction for", data.url);
+        console.log("🚀 Launching browser for", data.url);
         isRunning = true;
 
         const tagFilterArray = data.tagFilter
@@ -76,40 +77,83 @@ wss.on("connection", (ws) => {
         try {
           await launchExtractor({
             url: data.url,
+            automationFramework: data.automationFramework || "playwright", // 🧩 ensure this comes before wsBroadcast
             wsBroadcast: (m) => broadcastLog({ type: "log", ...m }),
             headless: data.headless || false,
             scanHidden: data.scanHidden || false,
-            automationFramework: data.automationFramework || "playwright",
+            autoTab: data.autoTab,
+            onlyLaunch: data.onlyLaunch ?? true,
             customExample: data.customExample || "",
             tagFilter: tagFilterArray,
+            generatePrompts: data.generatePrompts || false,
+          });
+          broadcastLog({
+            type: "log",
+            level: "INFO",
+            message: "✅ Browser launched successfully — session active until stopped.",
+          });
+        } catch (err) {
+          broadcastLog({ type: "error", message: err.message });
+          isRunning = false;
+        }
+      }
+
+      // 🧩 AUTO EXTRACTION — Triggered after user clicks "Start Auto Extraction"
+      if (data.type === "autoExtract") {
+        if (!isRunning) {
+          ws.send(
+            JSON.stringify({
+              type: "error",
+              message: "⚠️ No active session — please start extraction first.",
+            })
+          );
+          return;
+        }
+
+        console.log("🤖 Triggering auto extraction on current page...");
+        broadcastLog({ type: "log", level: "INFO", message: "🤖 Auto extraction started..." });
+
+        try {
+          const { triggerAutoExtract } = await import("../core/extractor.js");
+          await triggerAutoExtract({
+            wsBroadcast: (m) => broadcastLog({ type: "log", ...m }),
+            automationFramework: data.automationFramework || "playwright",
+            generatePrompts: data.generatePrompts || false,
+            tagFilter: data.tagFilter,
+            scanHidden: data.scanHidden || false,
+            triggeredAutoExtract: data.triggeredAutoExtract || false, 
           });
 
           broadcastLog({
             type: "done",
-            message: "✅ Extraction completed and saved successfully.",
+            message: "✅ Auto extraction complete for current page. Browser remains active until stopped.",
+          });
+
+          broadcastLog({
+            type: "log",
+            level: "INFO",
+            message: "🟢 Session remains active — click Stop Extraction to close browser.",
           });
         } catch (err) {
           broadcastLog({ type: "error", message: err.message });
-        } finally {
-          await stopExtractor();
-          isRunning = false;
-          console.log("🧹 Cleanup complete after extraction.");
         }
       }
 
-      // Stop Extraction
+      // 🧩 STOP EXTRACTION — Ends current session and closes browser
       if (data.type === "stop") {
         if (!isRunning) {
-          ws.send(JSON.stringify({ type: "log", level: "WARN", message: "No extraction running." }));
+          ws.send(JSON.stringify({ type: "log", level: "INFO", message: "ℹ️ No extraction running — nothing to stop." }));
           return;
         }
+
         console.log("🛑 Stop requested by user (via WebSocket)");
         await stopExtractor();
         isRunning = false;
+
         broadcastLog({
           type: "log",
-          level: "INFO",
-          message: `✅ Results saved in 'output' folder. Check locators_*.json and copilot_prompts_*.txt`,
+          level: "SUCCESS",
+          message: "✅ Browser closed and session ended successfully.",
         });
 
         broadcastLog({ type: "done", message: "✅ Extraction stopped and browser closed." });

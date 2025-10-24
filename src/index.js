@@ -73,6 +73,7 @@ const options = {
   proxyUrl: argv.proxyUrl || null,
   proxyUser: argv.proxyUser || null,
   proxyPass: argv.proxyPass || null,
+  useCDP: parseBool(argv.useCDP, false), // 🔹 NEW flag
 };
 
 (async () => {
